@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33801.468
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountService", "AccountService\AccountService.csproj", "{E75C87C0-8B1D-4712-A7FD-A90D61C4EC6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MicroServices", "MicroServices", "{D8D5B8CC-B26E-4732-8CB0-6466438FE509}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionService", "TransactionService\TransactionService.csproj", "{86A1AC58-4D5D-4BEE-BD7E-F54D6A5D3BE5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E75C87C0-8B1D-4712-A7FD-A90D61C4EC6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75C87C0-8B1D-4712-A7FD-A90D61C4EC6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75C87C0-8B1D-4712-A7FD-A90D61C4EC6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75C87C0-8B1D-4712-A7FD-A90D61C4EC6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A1AC58-4D5D-4BEE-BD7E-F54D6A5D3BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A1AC58-4D5D-4BEE-BD7E-F54D6A5D3BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A1AC58-4D5D-4BEE-BD7E-F54D6A5D3BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A1AC58-4D5D-4BEE-BD7E-F54D6A5D3BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E75C87C0-8B1D-4712-A7FD-A90D61C4EC6E} = {D8D5B8CC-B26E-4732-8CB0-6466438FE509}
+		{86A1AC58-4D5D-4BEE-BD7E-F54D6A5D3BE5} = {D8D5B8CC-B26E-4732-8CB0-6466438FE509}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {241327EB-7541-43E0-AE2F-FDA3CCABAB6B}
+	EndGlobalSection
+EndGlobal
