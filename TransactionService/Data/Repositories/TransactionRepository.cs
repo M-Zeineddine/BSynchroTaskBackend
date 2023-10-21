@@ -1,5 +1,6 @@
 ﻿using TransactionService.Data.Interfaces;
 using TransactionService.Models;
+using TransactionService.Models.InputModels;
 using TransactionService.Models.ResponseResults;
 
 namespace TransactionService.Data.Repositories
@@ -13,12 +14,12 @@ namespace TransactionService.Data.Repositories
             _context = context;
         }
 
-        public async Task<ResponseResult<Transaction>> AddTransaction(int accountId, decimal amount)
+        public async Task<ResponseResult<Transaction>> AddTransaction(TransactionCreationModel model)
         {
             var transaction = new Transaction
             {
-                AccountId = accountId,
-                Amount = amount
+                AccountId = model.AccountId,
+                Amount = model.Amount
             };
 
             _context.Transactions.Add(transaction);

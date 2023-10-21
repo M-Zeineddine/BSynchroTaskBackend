@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TransactionService.Data.Interfaces;
+using TransactionService.Models.InputModels;
 
 namespace TransactionService.Controllers
 {
@@ -15,9 +16,9 @@ namespace TransactionService.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddTransaction(int accountId, decimal amount)
+        public async Task<IActionResult> AddTransaction(TransactionCreationModel model)
         {
-            var result = await _transactionRepository.AddTransaction(accountId, amount);
+            var result = await _transactionRepository.AddTransaction(model);
             if (result.IsSuccess == true)
                 return Ok(result);
 
