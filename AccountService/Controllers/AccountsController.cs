@@ -19,9 +19,9 @@ namespace AccountService.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ResponseResult<AccountDetailsModel>> CreateAccount(int customerId, decimal initialCredit)
+        public async Task<ResponseResult<AccountDetailsModel>> CreateAccount(AccountCreationModel model)
         {
-            return await _accountRepository.CreateAccount(customerId, initialCredit);
+            return await _accountRepository.CreateAccount(model);
         }
 
     }

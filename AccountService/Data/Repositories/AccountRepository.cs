@@ -1,5 +1,6 @@
 ﻿using AccountService.Data.Interfaces;
 using AccountService.Models;
+using AccountService.Models.InputModels;
 using AccountService.Models.OutputModels;
 using AccountService.Models.ResponseResults;
 
@@ -16,9 +17,9 @@ namespace AccountService.Data.Repositories
             _context = context;
         }
 
-        public async Task<ResponseResult<AccountDetailsModel>> CreateAccount(int customerId, decimal initialCredit)
+        public async Task<ResponseResult<AccountDetailsModel>> CreateAccount(AccountCreationModel model)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
+            var customer = await _context.Customers.FindAsync(model.CustomerId);
             if (customer == null)
             {
                 return new ResponseResult<AccountDetailsModel>
@@ -29,7 +30,7 @@ namespace AccountService.Data.Repositories
                 };
             }
 
-            var account = new Account { CustomerId = customerId, Balance = initialCredit };
+            var account = new Account { CustomerId = model.CustomerId, Balance = model.InitialCredit };
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
