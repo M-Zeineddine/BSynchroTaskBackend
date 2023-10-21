@@ -1,4 +1,7 @@
-﻿using AccountService.Models;
+﻿using AccountService.Data.Interfaces;
+using AccountService.Models;
+using AccountService.Models.OutputModels;
+using AccountService.Models.ResponseResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountService.Controllers
@@ -7,24 +10,22 @@ namespace AccountService.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly AccountServiceDbContext _context; // Assuming you named it AccountDbContext
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomersController(AccountServiceDbContext context)
+        public CustomersController(ICustomerRepository customerRepository)
         {
-            _context = context;
+            _customerRepository = customerRepository;
         }
 
-        // GET: api/customers/{customerId}
+
+
         [HttpGet("{customerId}")]
-        public ActionResult GetCustomer(int customerId)
+        public async Task<ResponseResult<CustomerDetailsModel>> GetCustomer(int customerId)
         {
-            var customer = _context.Customers.Find(customerId);
-            if (customer == null)
-                return NotFound("Customer not found.");
-
-            return Ok(customer);
+            return await _customerRepository.GetCustomerDetails(customerId);
         }
 
-        // Other potential endpoints for creating, updating, or deleting customers can be added here
+
+
     }
 }

@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AccountService.Data.Interfaces;
+using AccountService.Data.Repositories;
+using AccountService.Models.InputModels;
+using AccountService.Models.OutputModels;
+using AccountService.Models.ResponseResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AccountService.Controllers
 {
@@ -6,6 +11,19 @@ namespace AccountService.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-            
+        private readonly IAccountRepository _accountRepository;
+
+        public AccountsController(IAccountRepository accountRepository)
+        {
+            _accountRepository = accountRepository;
+        }
+
+        [HttpPost("create")]
+        public async Task<ResponseResult<AccountDetailsModel>> CreateAccount(int customerId, decimal initialCredit)
+        {
+            return await _accountRepository.CreateAccount(customerId, initialCredit);
+        }
+
     }
+
 }
