@@ -53,10 +53,6 @@ namespace AccountService.Data.Repositories
 
                 var response = await _httpClient.PostAsJsonAsync(TransactionServiceUrl, transactionRequest);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    // Handle the error. Maybe log the error for further investigation.
-                }
             }
 
             return new ResponseResult<AccountDetailsModel>
@@ -73,8 +69,18 @@ namespace AccountService.Data.Repositories
         }
 
 
-        public async Task<ResponseResult<CustomerDetailsWithAccountsModel>> GetCustomerDetailsWithAccountsAsync(int customerId)
+        public async Task<ResponseResult<CustomerDetailsWithAccountsModel>> GetCustomerDetailsWithAccounts(int customerId)
         {
+            /*if (customerId == 0)
+            {
+                return new ResponseResult<CustomerDetailsWithAccountsModel>
+                {
+                    IsSuccess = false,
+                    Message = "Customer not found.",
+                    Result = null
+                };
+            }*/
+
             var customer = await _context.Customers.FindAsync(customerId);
 
             if (customer == null)
@@ -103,12 +109,6 @@ namespace AccountService.Data.Repositories
                 totalBalance += account.Balance;
 
                 var transactionsResponse = await _httpClient.GetAsync($"{TransactionServiceBaseUrl}/account/{account.AccountId}");
-                if (!transactionsResponse.IsSuccessStatusCode)
-                {
-                    // You can choose to handle the error more robustly here, maybe logging the error.
-                    continue;  // Skip this account if there's an issue fetching transactions.
-                }
-
 
                 var transactionWrapper = await transactionsResponse.Content.ReadAsAsync<ResponseResult<List<TransactionModel>>>();
                 var transactions = transactionWrapper.Result;
@@ -135,6 +135,12 @@ namespace AccountService.Data.Repositories
             };
         }
 
+
+        public async Task<Account> GetAccountById(int accountId)
+        {
+            return await _context.Accounts.FindAsync(accountId);
+        }
+    
 
     }
 

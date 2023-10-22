@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TransactionService.Data.Interfaces;
+using TransactionService.Models;
 using TransactionService.Models.InputModels;
+using TransactionService.Models.ResponseResults;
 
 namespace TransactionService.Controllers
 {
@@ -16,14 +18,11 @@ namespace TransactionService.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddTransaction(TransactionCreationModel model)
+        public async Task<ResponseResult<Transaction>> AddTransaction(TransactionCreationModel model)
         {
-            var result = await _transactionRepository.AddTransaction(model);
-            if (result.IsSuccess == true)
-                return Ok(result);
-
-            return BadRequest(result);
+            return await _transactionRepository.AddTransaction(model);
         }
+
 
 
         [HttpGet("account/{accountId}")]

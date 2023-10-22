@@ -26,24 +26,30 @@ namespace AccountService.Controllers
 
 
         [HttpGet("{customerId}/details")]
-        public async Task<IActionResult> GetCustomerDetailsWithAccounts(int customerId)
+        public async Task<ResponseResult<CustomerDetailsWithAccountsModel>> GetCustomerDetailsWithAccounts(int customerId)
         {
-            var customerDetailsResponse = await _accountRepository.GetCustomerDetailsWithAccountsAsync(customerId);
+            return await _accountRepository.GetCustomerDetailsWithAccounts(customerId);
 
-            if (customerDetailsResponse.Result == null)
-            {
-                return NotFound(new ResponseResult<CustomerDetailsWithAccountsModel>
-                {
-                    IsSuccess = false,
-                    Message = "Customer not found.",
-                    Result = null
-                });
-            }
-
-            return Ok(customerDetailsResponse);
         }
 
+        [HttpGet("{accountId}")]
+        public async Task<IActionResult> GetAccount(int accountId)
+        {
+            var account = await _accountRepository.GetAccountById(accountId);
+            if (account == null)
+            {
+                return NotFound(new { Message = "Account not found" });
+            }
 
+            var result = new AccountDetailsModel
+            {
+                Id = account.AccountId,
+                CustomerId = account.CustomerId,
+                Balance = account.Balance
+            };
+
+            return Ok(result);
+        }
 
     }
 
