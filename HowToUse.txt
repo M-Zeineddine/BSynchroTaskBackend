@@ -11,4 +11,7 @@
 	-Select 'Multiple startup projects'
 	-Choose 'Start' in the 'Action' selector
 	-Apply and press OK
-	-Press Start in Visual Studio 
+	-Press Start in Visual Studio
+
+4. Testing:
+	Testing could be done either on Postman, Swagger, or on the Frontend
