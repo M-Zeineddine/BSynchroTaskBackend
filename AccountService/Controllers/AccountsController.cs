@@ -24,6 +24,27 @@ namespace AccountService.Controllers
             return await _accountRepository.CreateAccount(model);
         }
 
+
+        [HttpGet("{customerId}/details")]
+        public async Task<IActionResult> GetCustomerDetailsWithAccounts(int customerId)
+        {
+            var customerDetailsResponse = await _accountRepository.GetCustomerDetailsWithAccountsAsync(customerId);
+
+            if (customerDetailsResponse.Result == null)
+            {
+                return NotFound(new ResponseResult<CustomerDetailsWithAccountsModel>
+                {
+                    IsSuccess = false,
+                    Message = "Customer not found.",
+                    Result = null
+                });
+            }
+
+            return Ok(customerDetailsResponse);
+        }
+
+
+
     }
 
 }

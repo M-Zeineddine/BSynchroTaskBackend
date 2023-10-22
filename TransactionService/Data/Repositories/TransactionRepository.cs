@@ -1,4 +1,5 @@
-﻿using TransactionService.Data.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using TransactionService.Data.Interfaces;
 using TransactionService.Models;
 using TransactionService.Models.InputModels;
 using TransactionService.Models.ResponseResults;
@@ -32,6 +33,12 @@ namespace TransactionService.Data.Repositories
                 Result = transaction
             };
         }
+
+        public async Task<List<Transaction>> GetTransactionsByAccountId(int accountId)
+        {
+            return await _context.Transactions.Where(t => t.AccountId == accountId).ToListAsync();
+        }
+
     }
 
 }

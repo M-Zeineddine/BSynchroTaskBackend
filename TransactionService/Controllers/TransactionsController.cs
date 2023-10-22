@@ -24,6 +24,30 @@ namespace TransactionService.Controllers
 
             return BadRequest(result);
         }
+
+
+        [HttpGet("account/{accountId}")]
+        public async Task<IActionResult> GetTransactionsByAccountId(int accountId)
+        {
+            var transactions = await _transactionRepository.GetTransactionsByAccountId(accountId);
+
+            if(transactions.Count == 0)
+            {
+                return NotFound(new
+                {
+                    IsSuccess = false,
+                    Message = "No transactions found for the provided account ID.",
+                    Result = transactions
+                });
+            }
+
+            return Ok(new
+            {
+                IsSuccess = true,
+                Message = "Transactions retrieved successfully.",
+                Result = transactions
+            });
+        }
     }
 
 }

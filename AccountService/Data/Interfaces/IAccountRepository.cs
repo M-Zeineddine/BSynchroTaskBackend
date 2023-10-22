@@ -8,6 +8,8 @@ namespace AccountService.Data.Interfaces
     public interface IAccountRepository
     {
         Task<ResponseResult<AccountDetailsModel>> CreateAccount(AccountCreationModel model);
+        Task<ResponseResult<CustomerDetailsWithAccountsModel>> GetCustomerDetailsWithAccountsAsync(int customerId);
+        
     }
 
 

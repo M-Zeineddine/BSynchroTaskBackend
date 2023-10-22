@@ -3,6 +3,7 @@ using AccountService.Models;
 using AccountService.Models.InputModels;
 using AccountService.Models.OutputModels;
 using AccountService.Models.ResponseResults;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace AccountService.Data.Repositories
@@ -12,6 +13,8 @@ namespace AccountService.Data.Repositories
         private readonly AccountServiceDbContext _context;
         private readonly HttpClient _httpClient;
         private static readonly string TransactionServiceUrl = "https://localhost:7203/api/Transactions/add";
+        private static readonly string TransactionServiceBaseUrl = "https://localhost:7203/api/Transactions";
+
 
         public AccountRepository(AccountServiceDbContext context, HttpClient httpClient)
         {
@@ -32,7 +35,11 @@ namespace AccountService.Data.Repositories
                 };
             }
 
-            var account = new Account { CustomerId = model.CustomerId, Balance = model.InitialCredit };
+            var account = new Account { 
+                CustomerId = model.CustomerId, 
+                Balance = model.InitialCredit 
+            };
+
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
@@ -40,7 +47,7 @@ namespace AccountService.Data.Repositories
             {
                 var transactionRequest = new
                 {
-                    AccountId = account.CustomerId,
+                    AccountId = account.AccountId,
                     Amount = model.InitialCredit
                 };
 
@@ -58,12 +65,77 @@ namespace AccountService.Data.Repositories
                 Message = "Account created successfully.",
                 Result = new AccountDetailsModel
                 {
-                    Id = account.CustomerId,
+                    Id = account.AccountId,
                     CustomerId = account.CustomerId,
                     Balance = account.Balance
                 }
             };
         }
+
+
+        public async Task<ResponseResult<CustomerDetailsWithAccountsModel>> GetCustomerDetailsWithAccountsAsync(int customerId)
+        {
+            var customer = await _context.Customers.FindAsync(customerId);
+
+            if (customer == null)
+            {
+                return new ResponseResult<CustomerDetailsWithAccountsModel>
+                {
+                    IsSuccess = false,
+                    Message = "Customer not found.",
+                    Result = null
+                };
+            }
+
+            var result = new CustomerDetailsWithAccountsModel
+            {
+                Id = customer.CustomerId,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Accounts = new List<AccountDetailsWithTransactionsModel>()
+            };
+
+            decimal totalBalance = 0;
+            var accounts = await _context.Accounts.Where(a => a.CustomerId == customerId).ToListAsync();
+
+            foreach (var account in accounts)
+            {
+                totalBalance += account.Balance;
+
+                var transactionsResponse = await _httpClient.GetAsync($"{TransactionServiceBaseUrl}/account/{account.AccountId}");
+                if (!transactionsResponse.IsSuccessStatusCode)
+                {
+                    // You can choose to handle the error more robustly here, maybe logging the error.
+                    continue;  // Skip this account if there's an issue fetching transactions.
+                }
+
+
+                var transactionWrapper = await transactionsResponse.Content.ReadAsAsync<ResponseResult<List<TransactionModel>>>();
+                var transactions = transactionWrapper.Result;
+
+
+                var accountDetail = new AccountDetailsWithTransactionsModel
+                {
+                    Id = account.AccountId,
+                    CustomerId = account.CustomerId,
+                    Balance = account.Balance,
+                    Transactions = transactions
+                };
+
+                result.Accounts.Add(accountDetail);
+            }
+
+            result.TotalBalance = totalBalance;
+
+            return new ResponseResult<CustomerDetailsWithAccountsModel>
+            {
+                IsSuccess = true,
+                Message = "Customer details retrieved successfully.",
+                Result = result
+            };
+        }
+
+
     }
 
 }
