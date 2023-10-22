@@ -1,6 +1,6 @@
 1. Clone the Repository:
-	> git clone <repository_url>
-   	> cd <repository_directory_name>
+	> git clone https://github.com/M-Zeineddine/BSynchroTaskBackend.git
+   	> cd BSynchroTaskBackend
 
 2. Setup the Database:
    	Ensure that the SQL Server instance is running. Update the connection strings in both 'appsettings.json' files (for Transaction Service and Account Service)
