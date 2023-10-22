@@ -1,0 +1,14 @@
+1. Clone the Repository:
+	> git clone <repository_url>
+   	> cd <repository_directory_name>
+
+2. Setup the Database:
+   	Ensure that the SQL Server instance is running. Update the connection strings in both 'appsettings.json' files (for Transaction Service and Account Service)
+
+3. Build and Run the Services:
+	-Right click on one of the services(Transaction or Account)
+	-Select 'Configue Startup Projects...'
+	-Select 'Multiple startup projects'
+	-Choose 'Start' in the 'Action' selector
+	-Apply and press OK
+	-Press Start in Visual Studio 
