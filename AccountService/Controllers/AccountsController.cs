@@ -1,9 +1,11 @@
 ﻿using AccountService.Data.Interfaces;
 using AccountService.Data.Repositories;
+using AccountService.Models;
 using AccountService.Models.InputModels;
 using AccountService.Models.OutputModels;
 using AccountService.Models.ResponseResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountService.Controllers
 {
@@ -12,10 +14,12 @@ namespace AccountService.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly AccountServiceDbContext _context;
 
-        public AccountsController(IAccountRepository accountRepository)
+        public AccountsController(IAccountRepository accountRepository, AccountServiceDbContext context)
         {
             _accountRepository = accountRepository;
+            _context = context;
         }
 
         [HttpPost("create")]
@@ -49,6 +53,24 @@ namespace AccountService.Controllers
             };
 
             return Ok(result);
+        }
+
+
+        [HttpPut("{accountId}/balance")]
+        public async Task<IActionResult> UpdateAccountBalance(int accountId, [FromBody] decimal updatedBalance)
+        {
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == accountId);
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            account.Balance = updatedBalance;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
     }

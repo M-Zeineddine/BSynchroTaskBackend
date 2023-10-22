@@ -35,9 +35,20 @@ namespace AccountService.Data.Repositories
                 };
             }
 
+            if (model.InitialCredit<0)
+            {
+                return new ResponseResult<AccountDetailsModel>
+                {
+                    IsSuccess = false,
+                    Message = "Initial value can't be negative.",
+                    Result = null
+                };
+            }
+
+
             var account = new Account { 
                 CustomerId = model.CustomerId, 
-                Balance = model.InitialCredit 
+                Balance = 0
             };
 
             _context.Accounts.Add(account);

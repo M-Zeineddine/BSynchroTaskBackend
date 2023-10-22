@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TransactionService.Data.Interfaces;
 using TransactionService.Models;
 using TransactionService.Models.InputModels;
@@ -32,6 +33,60 @@ namespace TransactionService.Data.Repositories
                     Result = null
                 };
             }
+
+
+            if (model.Amount == 0)
+            {
+                return new ResponseResult<Transaction>
+                {
+                    IsSuccess = false,
+                    Message = "Can't make transaction of 0.",
+                    Result = null
+                };
+            }
+
+
+            // Fetch current account details
+            dynamic accountDetails = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+
+            if (accountDetails == null || accountDetails.balance == null)
+            {
+                return new ResponseResult<Transaction>
+                {
+                    IsSuccess = false,
+                    Message = "Invalid account details received.",
+                    Result = null
+                };
+            }
+
+            decimal currentBalance = accountDetails.balance;
+            decimal updatedBalance = currentBalance + model.Amount;
+
+            if (updatedBalance < 0)
+            {
+                return new ResponseResult<Transaction>
+                {
+                    IsSuccess = false,
+                    Message = "Insufficient funds.",
+                    Result = null
+                };
+            }
+
+
+
+            // Update the balance in the Accounts service
+            var updateResponse = await _httpClient.PutAsJsonAsync($"https://localhost:7157/api/Accounts/{model.AccountId}/balance", updatedBalance);
+
+            if (!updateResponse.IsSuccessStatusCode)
+            {
+                return new ResponseResult<Transaction>
+                {
+                    IsSuccess = false,
+                    Message = "Failed to update the account balance.",
+                    Result = null
+                };
+            }
+
 
             //Rest of code to add transaction
             var transaction = new Transaction
